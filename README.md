@@ -1,17 +1,59 @@
-# neural-network-cpp
-A simple and optimized neural network implementation in C++ for training and testing on the MNIST dataset. This project uses Eigen for efficient matrix and vector operations and implements core concepts like forward propagation, backpropagation, and gradient descent.
+```markdown
+# NeuralNetwork-CPP
+
+A neural network implementation in C++ for MNIST digit classification using Eigen.
 
 ## Project Structure
+```plaintext
 neural-network-cpp/
 ├── include/
-│   └── NeuralNetwork.h       # Header file for the NeuralNetwork class
+│   └── NeuralNetwork.h
 ├── src/
-│   ├── NeuralNetwork.cpp     # Implementation of the NeuralNetwork class
-│   ├── main.cpp              # Entry point with training and testing logic
-├── data/                     # MNIST dataset files (place them here)
+│   ├── NeuralNetwork.cpp
+│   ├── main.cpp
+├── data/
 │   ├── train-images-idx3-ubyte
 │   ├── train-labels-idx1-ubyte
 │   ├── t10k-images-idx3-ubyte
 │   └── t10k-labels-idx1-ubyte
-├── CMakeLists.txt            # (Optional) CMake configuration
-└── README.md                 # Project description and usage guide
+└── CMakeLists.txt
+```
+
+## Dependencies
+- Eigen library
+
+## Setup
+1. Clone repository
+2. Download MNIST dataset files to data/
+3. Install Eigen: `brew install eigen` (macOS) or `sudo apt-get install libeigen3-dev` (Linux)
+
+## Build
+```bash
+g++ -std=c++17 -I/opt/homebrew/include/eigen3 -o NeuralNetwork src/main.cpp
+```
+
+Or with CMake:
+```cmake
+cmake_minimum_required(VERSION 3.15)
+project(NeuralNetwork-CPP)
+set(CMAKE_CXX_STANDARD 17)
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
+add_executable(NeuralNetwork src/main.cpp)
+```
+
+## Run
+```bash
+./NeuralNetwork
+```
+
+## Features
+- Forward/backward propagation
+- Gradient descent
+- SIMD optimization
+- Custom network architecture
+- Training statistics output
+
+## License
+MIT License
+```
