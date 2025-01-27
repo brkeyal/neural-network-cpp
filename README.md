@@ -1,4 +1,4 @@
-```markdown
+
 # NeuralNetwork-CPP
 
 A neural network implementation in C++ for MNIST digit classification using Eigen.
