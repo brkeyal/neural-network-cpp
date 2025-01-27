@@ -7,16 +7,17 @@ A neural network implementation in C++ for MNIST digit classification using Eige
 ```plaintext
 neural-network-cpp/
 ├── include/
-│   └── NeuralNetwork.h
+│   └── NeuralNetwork.h           # Header file for the NeuralNetwork class
 ├── src/
-│   ├── NeuralNetwork.cpp
-│   ├── main.cpp
-├── data/
+│   ├── NeuralNetwork.cpp         # Implementation of the NeuralNetwork class
+│   ├── main.cpp                  # Entry point with training and testing logic
+├── data/                         # MNIST dataset files (place them here)
 │   ├── train-images-idx3-ubyte
 │   ├── train-labels-idx1-ubyte
 │   ├── t10k-images-idx3-ubyte
 │   └── t10k-labels-idx1-ubyte
-└── CMakeLists.txt
+└── CMakeLists.txt                # (Optional) CMake configuration
+└── README.md                     # Project description and usage guide
 ```
 
 ## Dependencies
