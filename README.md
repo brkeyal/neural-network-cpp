@@ -1,59 +1,127 @@
-
 # NeuralNetwork-CPP
 
-A neural network implementation in C++ for MNIST digit classification using Eigen.
+A simple neural network implementation in C++ for training and testing on the MNIST dataset. This project uses Eigen for efficient matrix and vector operations and implements core concepts like forward propagation, backpropagation, and gradient descent.
 
 ## Project Structure
 ```plaintext
 neural-network-cpp/
 ├── include/
-│   └── NeuralNetwork.h           # Header file for the NeuralNetwork class
+│   └── NeuralNetwork.h       # Header file for the NeuralNetwork class
 ├── src/
-│   ├── NeuralNetwork.cpp         # Implementation of the NeuralNetwork class
-│   ├── main.cpp                  # Entry point with training and testing logic
-├── data/                         # MNIST dataset files (place them here)
+│   ├── NeuralNetwork.cpp     # Implementation of the NeuralNetwork class
+│   ├── main.cpp              # Entry point with training and testing logic
+├── data/                     # MNIST dataset files (place them here)
 │   ├── train-images-idx3-ubyte
 │   ├── train-labels-idx1-ubyte
 │   ├── t10k-images-idx3-ubyte
 │   └── t10k-labels-idx1-ubyte
-└── CMakeLists.txt                # (Optional) CMake configuration
-└── README.md                     # Project description and usage guide
+├── CMakeLists.txt            # (Optional) CMake configuration
+└── README.md                 # Project description and usage guide
 ```
+
+## Features
+- Implements a fully connected neural network for MNIST digit classification.
+- Key components:
+  - Forward Propagation
+  - Backpropagation 
+  - Gradient Descent
+- Supports customizable architectures with dynamic layer sizes.
+- Outputs training statistics (loss, accuracy, runtime).
 
 ## Dependencies
-- Eigen library
+- Eigen: A C++ template library for linear algebra.
 
-## Setup
-1. Clone repository
-2. Download MNIST dataset files to data/
-3. Install Eigen: `brew install eigen` (macOS) or `sudo apt-get install libeigen3-dev` (Linux)
+## Getting Started
 
-## Build
+### 1. Clone the Repository
 ```bash
-g++ -std=c++17 -I/opt/homebrew/include/eigen3 -o NeuralNetwork src/main.cpp
+git clone https://github.com/yourusername/neural-network-cpp.git
+cd neural-network-cpp
 ```
 
-Or with CMake:
+### 2. Download the MNIST Dataset
+- Download the files from MNIST Official Website:
+  - `train-images-idx3-ubyte`
+  - `train-labels-idx1-ubyte`
+  - `t10k-images-idx3-ubyte`
+  - `t10k-labels-idx1-ubyte`
+- Place these files in the `data/` folder.
+
+### 3. Compile the Code
+
+#### Using g++
+```bash
+g++ -std=c++17 -Iinclude -o NeuralNetwork src/main.cpp src/NeuralNetwork.cpp
+```
+
+#### Using CMake
+1. Create a `CMakeLists.txt` file:
 ```cmake
 cmake_minimum_required(VERSION 3.15)
 project(NeuralNetwork-CPP)
+
 set(CMAKE_CXX_STANDARD 17)
-find_package(Eigen3 REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIR})
-add_executable(NeuralNetwork src/main.cpp)
+
+include_directories(include)
+add_executable(NeuralNetwork src/main.cpp src/NeuralNetwork.cpp)
 ```
 
-## Run
+2. Build the project:
+```bash
+mkdir build && cd build
+cmake ..
+make
+```
+
+### 4. Run the Program
 ```bash
 ./NeuralNetwork
 ```
 
-## Features
-- Forward/backward propagation
-- Gradient descent
-- SIMD optimization
-- Custom network architecture
-- Training statistics output
+## Code Overview
+
+### 1. Main Program
+Located in `main.cpp`:
+- Loads MNIST images and labels
+- Initializes neural network with customizable architecture
+- Trains the network using `start_training_loop`
+- Calculates training and test accuracy
+
+### 2. Neural Network Class
+Located in `NeuralNetwork.h` and `NeuralNetwork.cpp`:
+- Implements:
+  - `forward`: Computes activations for each layer
+  - `backpropagate`: Computes gradients for weights and biases
+  - `train`: Trains on a single sample
+  - `start_training_loop`: Handles training loop
+  - `predict`: Makes predictions
+  - `calculate_accuracy`: Evaluates performance
+
+## Example Output
+```plaintext
+Loading MNIST data...
+Creating neural network...
+Total images: 60000, Batch size: 64, Total batches per epoch: 937, Total epochs: 5, Learning rate: 0.1
+Starting training... train_images.size()=60000
+
+[00:00:01] Epoch 1, Batch 10, Loss: 0.122
+[00:00:02] Epoch 1, Batch 20, Loss: 0.098
+...
+
+Training completed. Final Results:
+> Training Accuracy: 98.5%
+> Test Accuracy: 97.3%
+> Total training time: 12 minutes and 34 seconds
+```
+
+## Notes
+- Optimized for MNIST but extendable to other datasets
+- Ensure Eigen is installed and included
+
+## To-Do
+- Add support for saving/loading trained models
+- Extend functionality for other datasets
+- Implement additional activation functions
 
 ## License
 MIT License
