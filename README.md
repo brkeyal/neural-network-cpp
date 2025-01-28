@@ -6,17 +6,18 @@ A simple neural network implementation in C++ for training and testing on the MN
 ```plaintext
 neural-network-cpp/
 ├── NeuralNetwork-CPP/
+│   ├── NeuralNetwork-CPP.xcodeproj  # Xcode Project
 │   ├── include/
-│   │   └── NeuralNetwork.h       # Header file for the NeuralNetwork class
+│   │   └── NeuralNetwork.h          # Header file for the NeuralNetwork class
 │   ├── src/
-│   │   ├── NeuralNetwork.cpp     # Implementation of the NeuralNetwork class
-│   │   └── main.cpp              # Entry point with training and testing logic
-│   └── data/                     # MNIST dataset files (place them here)
-│       ├── (TO DOWNLOAD) train-images-idx3-ubyte
-│       ├── (TO DOWNLOAD)  train-labels-idx1-ubyte
+│   │   ├── NeuralNetwork.cpp        # Implementation of the NeuralNetwork class
+│   │   └── main.cpp                 # Entry point with training and testing logic
+│   └── data/                        # MNIST dataset files (place them here)
+│       ├── (TO DOWNLOAD) train-images-idx3-ubyte  # too big for git
+│       ├── (TO DOWNLOAD)  train-labels-idx1-ubyte  # too big for git
 │       ├── t10k-images-idx3-ubyte
 │       └── t10k-labels-idx1-ubyte
-└── README.md                     # Project description and usage guide
+└── README.md                        # Project description and usage guide
 ```
 
 ## Features
