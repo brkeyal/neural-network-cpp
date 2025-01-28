@@ -12,8 +12,8 @@ neural-network-cpp/
 │   │   ├── NeuralNetwork.cpp     # Implementation of the NeuralNetwork class
 │   │   └── main.cpp              # Entry point with training and testing logic
 │   └── data/                     # MNIST dataset files (place them here)
-│       ├── train-images-idx3-ubyte
-│       ├── train-labels-idx1-ubyte
+│       ├── (TO DOWNLOAD) train-images-idx3-ubyte
+│       ├── (TO DOWNLOAD)  train-labels-idx1-ubyte
 │       ├── t10k-images-idx3-ubyte
 │       └── t10k-labels-idx1-ubyte
 └── README.md                     # Project description and usage guide
