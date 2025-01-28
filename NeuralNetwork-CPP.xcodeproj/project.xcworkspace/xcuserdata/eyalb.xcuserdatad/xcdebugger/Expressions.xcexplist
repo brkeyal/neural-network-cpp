@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "NeuralNetwork::train(std::__1::vector&lt;double, std::__1::allocator&lt;double&gt;&gt; const&amp;, std::__1::vector&lt;double, std::__1::allocator&lt;double&gt;&gt; const&amp;):main.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "NeuralNetwork::backprop_worker(std::__1::vector&lt;double, std::__1::allocator&lt;double&gt;&gt; const&amp;, unsigned long, unsigned long):main.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "weights[i][j].size();">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "NeuralNetwork::predict(std::__1::vector&lt;double, std::__1::allocator&lt;double&gt;&gt; const&amp;) [inlined]:main.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "std::max_element(output.begin(), output.end()) - output.begin();">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "NeuralNetwork::forward(std::__1::vector&lt;double, std::__1::allocator&lt;double&gt;&gt; const&amp;):main.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "NeuralNetwork::backpropagate(std::__1::vector&lt;std::__1::vector&lt;double, std::__1::allocator&lt;double&gt;&gt;, std::__1::allocator&lt;std::__1::vector&lt;double, std::__1::allocator&lt;double&gt;&gt;&gt;&gt; const&amp;, std::__1::vector&lt;double, std::__1::allocator&lt;double&gt;&gt; const&amp;):main.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "error * activations.back()[i] * (1 - activations.back()[i]);">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
