@@ -47,36 +47,7 @@ cd neural-network-cpp
   - `t10k-labels-idx1-ubyte`
 - Place these files in the `data/` folder.
 
-### 3. Compile the Code
-
-#### Using g++
-```bash
-g++ -std=c++17 -Iinclude -o NeuralNetwork src/main.cpp src/NeuralNetwork.cpp
-```
-
-#### Using CMake
-1. Create a `CMakeLists.txt` file:
-```cmake
-cmake_minimum_required(VERSION 3.15)
-project(NeuralNetwork-CPP)
-
-set(CMAKE_CXX_STANDARD 17)
-
-include_directories(include)
-add_executable(NeuralNetwork src/main.cpp src/NeuralNetwork.cpp)
-```
-
-2. Build the project:
-```bash
-mkdir build && cd build
-cmake ..
-make
-```
-
-### 4. Run the Program
-```bash
-./NeuralNetwork
-```
+### 3. Run the project in Xcode (NeuralNetwork-CPP.xcodeproj)
 
 ## Code Overview
 
