@@ -117,6 +117,13 @@ void NeuralNetwork::train(const VectorXd& input, const VectorXd& target) {
     backpropagate(target);
 }
 
+/*
+This function - 
+- Runs the input forward through the network (forward(input)).
+- Retrieves the output layer activations.
+- Finds the index of the max activation (maxCoeff(&predicted_class))—i.e., the predicted class.
+- Returns the predicted class index.
+*/
 int NeuralNetwork::predict(const VectorXd& input) {
     forward(input);
     const VectorXd& output = layers_activations.back();
@@ -133,10 +140,7 @@ double NeuralNetwork::calculate_accuracy(const std::vector<VectorXd>& inputs,
         int predicted = predict(inputs[i]);
         int actual = 0;
         targets[i].maxCoeff(&actual);
-
-        if (predicted == actual) {
-            correct++;
-        }
+        if (predicted == actual) correct++;
     }
 
     return static_cast<double>(correct) / inputs.size() * 100.0;
@@ -147,6 +151,20 @@ VectorXd NeuralNetwork::predict_probabilities(const VectorXd &input) {
     return layers_activations.back();
 }
 
+/*
+    ensemble_predict:
+    Given multiple neural networks (an ensemble), this function predicts the class of an input
+    by averaging the probability distributions from all models and selecting the class with the 
+    highest averaged probability.
+
+    Steps:
+    1. Initialize a vector `avg_probs` to store the sum of predicted probabilities (size 10, assuming 10 classes).
+    2. Loop over each neural network in `models`:
+       - Get its probability predictions for the input.
+       - Accumulate the probabilities into `avg_probs`.
+    3. Normalize `avg_probs` by dividing each element by the number of models.
+    4. Find the index of the highest probability in `avg_probs` (predicted class) and return it.
+*/
 static int ensemble_predict(std::vector<NeuralNetwork>& models,
                           const VectorXd &input) {
     std::vector<double> avg_probs(10, 0.0);
@@ -171,7 +189,8 @@ double ensemble_accuracy(std::vector<NeuralNetwork>& models,
     int correct = 0;
     for (size_t i = 0; i < inputs.size(); i++) {
         int predicted = ensemble_predict(models, inputs[i]);
-        int actual = std::max_element(targets[i].begin(), targets[i].end()) - targets[i].begin();
+        int actual = 0;
+        targets[i].maxCoeff(&actual);
         if (predicted == actual) correct++;
     }
     return static_cast<double>(correct) / inputs.size() * 100.0;
