@@ -1,20 +1,16 @@
-//
-//  NeuralNetwork.h
-//  MyCPPProject
-//
-//  Created by Eyal Barak on 27/01/2025.
-//
+#ifndef NEURALNETWORK_H
+#define NEURALNETWORK_H
 
-#ifndef NeuralNetwork_h
-#define NeuralNetwork_h
-
+//#include <iostream>
+//#include <vector>
 #include <Eigen/Dense>
 
+using namespace std;
 using namespace Eigen;
 
 class NeuralNetwork {
-private:
-    std::vector<int> layer_sizes;
+public:
+    double learning_rate;
 
     struct Layer {
         MatrixXd weights;
@@ -23,30 +19,17 @@ private:
         int output_size;
     };
 
-    std::vector<Layer> network_layers; // Hidden layers (not including output layer)
-    std::vector<VectorXd> layers_activations; // Pre-allocated activations for each layer
+    vector<int> layer_sizes;
+    vector<Layer> network_layers;
 
-public:
-    double learning_rate = 0.1;
+    NeuralNetwork(const vector<int>& layer_sizes);
 
-    NeuralNetwork(const std::vector<int>& layer_sizes);
-//    void start_training_loop(auto train_images, auto train_labels, auto test_images, auto test_labels, int epochs, int batch_size);
-    void start_training_loop(const std::vector<Eigen::VectorXd>& train_images,
-                             const std::vector<Eigen::VectorXd>& train_labels,
-                             const std::vector<Eigen::VectorXd>& test_images,
-                             const std::vector<Eigen::VectorXd>& test_labels,
-                             int epochs,
-                             int batch_size,
-                             int start_idx,
-                             int end_idx);
-    
-    void forward(const VectorXd& input);
-    void backpropagate(const VectorXd& target);
-    void train(const VectorXd& input, const VectorXd& target);
-    int predict(const VectorXd& input);
-    VectorXd predict_probabilities(const VectorXd &input);
-    double calculate_accuracy(const std::vector<VectorXd>& inputs, const std::vector<VectorXd>& targets);
-
+    vector<VectorXd> forward(const VectorXd &input);
+    vector<MatrixXd> forwardBatch(const MatrixXd &inputBatch);
+    void backpropagateBatch(const MatrixXd &targetBatch, const vector<MatrixXd> &activations);
+    void trainBatch(const MatrixXd &inputBatch, const MatrixXd &targetBatch);
+    int predict(const VectorXd &input);
+    double calculate_accuracy(const vector<VectorXd> &inputs, const vector<VectorXd> &targets);
 };
 
-#endif /* NeuralNetwork_h */
+#endif // NEURALNETWORK_H

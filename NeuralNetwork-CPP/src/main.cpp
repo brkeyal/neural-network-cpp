@@ -1,13 +1,15 @@
 #include <iostream>
-#include <cassert>
 #include <fstream>
+#include <random>
 #include <Eigen/Dense>
-using namespace Eigen;
-#include <thread>
-
 #include "NeuralNetwork.h"
 
-double ensemble_accuracy(std::vector<NeuralNetwork>& models, const std::vector<VectorXd>& inputs, const std::vector<VectorXd>& targets);
+using namespace std;
+using namespace Eigen;
+
+// -------------------------
+// MNIST Data Loading Functions (unchanged)
+// -------------------------
 
 // MNIST data loading functions
 std::vector<VectorXd> load_mnist_images(const std::string& filename) {
@@ -97,84 +99,69 @@ std::vector<VectorXd> load_mnist_labels(const std::string& filename) {
     return labels;
 }
 
+
+
+// ===========================
+// Main Function
+// ===========================
 int main() {
     try {
-        // Load MNIST data
-        std::cout << "Loading MNIST data..." << std::endl;
-        auto train_images = load_mnist_images("train-images-idx3-ubyte");
-        auto train_labels = load_mnist_labels("train-labels-idx1-ubyte");
-        auto test_images = load_mnist_images("t10k-images-idx3-ubyte");
-        auto test_labels = load_mnist_labels("t10k-labels-idx1-ubyte");
+        cout << "Loading MNIST data..." << endl;
+        vector<VectorXd> train_images = load_mnist_images("train-images-idx3-ubyte");
+        vector<VectorXd> train_labels = load_mnist_labels("train-labels-idx1-ubyte");
+        vector<VectorXd> test_images = load_mnist_images("t10k-images-idx3-ubyte");
+        vector<VectorXd> test_labels = load_mnist_labels("t10k-labels-idx1-ubyte");
 
-        // Create neural network
-        std::cout << "Creating neural network..." << std::endl;
-//        NeuralNetwork nn({784, 128, 64, 10});  // Example architecture
+        cout << "Creating neural network..." << endl;
+        NeuralNetwork nn({784, 128, 64, 10});
 
-        std::vector<std::thread> threads;
-        int num_threads = 3;
-        int chunk_size = train_images.size() / num_threads;
-         
-        std::vector<NeuralNetwork> models;
-        for (int i = 0; i < num_threads; i++) {
-            std::cout << "\nCreating neural network #" << i << std::endl;
-            models.emplace_back(std::vector<int>{784, 128, 64, 10});
+        // Training parameters.
+        const int epochs = 5;
+        const int batch_size = 64;
+        random_device rd;
+        mt19937 gen(rd());
+
+        cout << "Starting training..." << endl;
+        auto training_start_time = chrono::steady_clock::now();
+
+        for (int epoch = 0; epoch < epochs; epoch++) {
+            // Shuffle the training data indices.
+            vector<int> indices(train_images.size());
+            iota(indices.begin(), indices.end(), 0);
+            shuffle(indices.begin(), indices.end(), gen);
+
+            // Process mini–batches using the shuffled indices.
+            for (size_t i = 0; i < indices.size(); i += batch_size) {
+                int current_batch_size = min(batch_size, static_cast<int>(indices.size() - i));
+                MatrixXd batch_inputs(train_images[0].size(), current_batch_size);
+                MatrixXd batch_targets(train_labels[0].size(), current_batch_size);
+
+                for (int j = 0; j < current_batch_size; j++) {
+                    int idx = indices[i + j];
+                    batch_inputs.col(j) = train_images[idx];
+                    batch_targets.col(j) = train_labels[idx];
+                }
+                nn.trainBatch(batch_inputs, batch_targets);
+            }
+            cout << "Epoch " << (epoch + 1) << " complete." << endl;
         }
-        
-        // Training parameters
-        int epochs = 5;
-        int batch_size = 64;
 
-        std::cout << "Total images: " << train_images.size() << ", Batch size: " << batch_size
-                  << ", Total batches per epoch: " << train_images.size() / batch_size
-                  << ", Total epochs: " << epochs << std::endl;
+        auto training_end_time = chrono::steady_clock::now();
+        auto duration_seconds = chrono::duration_cast<chrono::seconds>(training_end_time - training_start_time);
 
-        auto training_start_time = std::chrono::steady_clock::now();
+        double accuracy = nn.calculate_accuracy(test_images, test_labels);
+//        double accuracy = nn.calculate_accuracy(train_images, train_labels);
 
-        for (int t = 0; t < num_threads; t++) {
-            int start_idx = t * chunk_size;
-            int end_idx = (t == num_threads - 1) ? train_images.size() : (t + 1) * chunk_size;
-            
-            threads.emplace_back([&models, t, &train_images, &train_labels, start_idx, end_idx, batch_size, epochs, test_images, test_labels]() {
-                
-                models[t].start_training_loop(train_images, train_labels, test_images, test_labels, epochs, batch_size, start_idx, end_idx);
-                
-            });
-        }
-        
-        // Wait for threads to complete
-        for (auto& thread : threads) {
-            thread.join();
-        }
-        
-        std::cout << "\nAll " << num_threads << " threads completed." << std::endl;
-
-        // Calculate final accuracy
-        auto training_end_time = std::chrono::steady_clock::now();
-        auto duration_seconds = std::chrono::duration_cast<std::chrono::seconds>(training_end_time - training_start_time);
-
-        double final_ensembled_accuracy = ensemble_accuracy(models, train_images, train_labels);
-        std::cout << "\nTraining completed. Final Results:"
-                  << "\n> [ensemble] Test Accuracy: " << final_ensembled_accuracy << "%"
-                    <<"\n> Total training time: " << duration_seconds.count() / 60 << " minutes and "
-                    << duration_seconds.count() % 60 << " seconds" << std::endl;
-
-        
-
-//        assert(final_ensembled_accuracy > 95);
-        
-//        for (int i = 0; i < num_threads; i++) {
-//            double final_test_accuracy = models[i].calculate_accuracy(test_images, test_labels);
-//            std::cout << "\nTraining completed. Final Results:"
-//                      << "\n> [model] Test Accuracy: " << final_test_accuracy << "%"
-//                      << "\n> Total training time: " << duration_seconds.count() / 60 << " minutes and "
-//                      << duration_seconds.count() % 60 << " seconds" << std::endl;
-//    
-//        }
-        
-    } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+        cout << "\nTraining completed. Final Results:" << endl;
+        cout << "> Test Accuracy: " << accuracy << "%" << endl;
+        cout << "> Total training time: "
+             << duration_seconds.count() / 60 << " minutes and "
+             << duration_seconds.count() % 60 << " seconds" << endl;
+    }
+    catch (const exception &e) {
+        cerr << "Error: " << e.what() << endl;
         return 1;
     }
-
     return 0;
 }
+
