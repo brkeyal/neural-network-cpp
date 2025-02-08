@@ -13,19 +13,19 @@ using namespace Eigen;
 // ===========================
 NeuralNetwork::NeuralNetwork(const vector<int>& layer_sizes)
     : learning_rate(0.1), layer_sizes(layer_sizes) {
-        
-    random_device rd;
-    mt19937 gen(rd());
 
     for (size_t i = 0; i < layer_sizes.size() - 1; i++) {
         Layer layer;
         layer.input_size = layer_sizes[i];
         layer.output_size = layer_sizes[i + 1];
+        
         // He initialization (good for ReLU)
         double scale = sqrt(2.0 / layer.input_size);
         layer.weights = MatrixXd::Random(layer.input_size, layer.output_size) * scale;
+        
         // Biases can be initialized to zero.
         layer.biases = VectorXd::Zero(layer.output_size);
+        
         network_layers.push_back(layer);
     }
 }

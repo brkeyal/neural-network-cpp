@@ -127,12 +127,19 @@ int main() {
         for (int epoch = 0; epoch < epochs; epoch++) {
             // Shuffle the training data indices.
             vector<int> indices(train_images.size());
-            iota(indices.begin(), indices.end(), 0);
+            iota(indices.begin(), indices.end(), 0); // Fill the vector with sequential numbers (0, 1, 2, ... , N-1)
             shuffle(indices.begin(), indices.end(), gen);
 
             // Process mini–batches using the shuffled indices.
             for (size_t i = 0; i < indices.size(); i += batch_size) {
+                
+                // Ensures batches contain at most batch_size elements. Handles last batch correctly when fewer than batch_size elements remain.
                 int current_batch_size = min(batch_size, static_cast<int>(indices.size() - i));
+                
+                // Eigen::MatrixXd mat(rows, cols);
+                // If images are 28×28 pixels (flattened to 784 features), and current_batch_size = 64, the matrix size will be: (784 × 64)
+                // Each column represents one image (a sample).
+                // Each row represents a specific pixel (feature) across all images.
                 MatrixXd batch_inputs(train_images[0].size(), current_batch_size);
                 MatrixXd batch_targets(train_labels[0].size(), current_batch_size);
 
