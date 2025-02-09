@@ -31,6 +31,9 @@ public:
     
     void trainBatch(const MatrixXd &inputBatch, const MatrixXd &targetBatch);
     double calculate_accuracy(const vector<VectorXd> &inputs, const vector<VectorXd> &targets);
+    double calculate_accuracy_batch(const vector<VectorXd> &inputs, const vector<VectorXd> &targets, int batch_size);
+
+    
 };
 
 #endif // NEURALNETWORK_H

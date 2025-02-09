@@ -137,9 +137,9 @@ int main() {
                 int current_batch_size = min(batch_size, static_cast<int>(indices.size() - i));
                 
                 // Eigen::MatrixXd mat(rows, cols);
-                // If images are 28×28 pixels (flattened to 784 features), and current_batch_size = 64, the matrix size will be: (784 × 64)
-                // Each column represents one image (a sample).
-                // Each row represents a specific pixel (feature) across all images.
+                // If images are 28×28 pixels (flattened to 784 features), and current_batch_size = 64, the batch inputs matrix will be: (784 × 64)
+                // Each column represents one image (a sample). Each row represents a specific pixel (feature) across all images.
+                // the batch targets matrix will be: (10 x 64)
                 MatrixXd batch_inputs(train_images[0].size(), current_batch_size);
                 MatrixXd batch_targets(train_labels[0].size(), current_batch_size);
 
@@ -156,11 +156,32 @@ int main() {
         auto training_end_time = chrono::steady_clock::now();
         auto duration_seconds = chrono::duration_cast<chrono::seconds>(training_end_time - training_start_time);
 
+        auto training_start_time2 = chrono::steady_clock::now();
         double accuracy = nn.calculate_accuracy(test_images, test_labels);
-//        double accuracy = nn.calculate_accuracy(train_images, train_labels);
+        auto training_end_time2 = chrono::steady_clock::now();
+        auto duration_seconds2 = chrono::duration_cast<chrono::seconds>(training_end_time2 - training_start_time2);
+        auto duration_milliseconds2 = chrono::duration_cast<chrono::milliseconds>(training_end_time2 - training_start_time2);
 
+        cout << "> Total calculate accuracy time: "
+             << duration_seconds2.count() / 60 << " minutes and "
+             << duration_seconds2.count() % 60 << " seconds ("
+             << duration_milliseconds2.count() << " ms)" << endl;
+        
+        auto training_start_time3 = chrono::steady_clock::now();
+        double accuracy_batch = nn.calculate_accuracy_batch(train_images, train_labels, batch_size);
+        auto training_end_time3 = chrono::steady_clock::now();
+        auto duration_seconds3 = chrono::duration_cast<chrono::seconds>(training_end_time3 - training_start_time3);
+        auto duration_milliseconds3 = chrono::duration_cast<chrono::milliseconds>(training_end_time3 - training_start_time3);
+
+        cout << "> Total calculate accuracy batch time: "
+             << duration_seconds3.count() / 60 << " minutes and "
+             << duration_seconds3.count() % 60 << " seconds ("
+             << duration_milliseconds3.count() << " ms)" << endl;
+        
+        
         cout << "\nTraining completed. Final Results:" << endl;
         cout << "> Test Accuracy: " << accuracy << "%" << endl;
+        cout << "> Test Accuracy (Batch): " << accuracy_batch << "%" << endl;
         cout << "> Total training time: "
              << duration_seconds.count() / 60 << " minutes and "
              << duration_seconds.count() % 60 << " seconds" << endl;
